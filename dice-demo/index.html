@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lektura — Roll the Odds</title>
+  <meta name="description" content="Lektura — a scroll-driven 3D dice experience built with GSAP and Lenis." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="nav__logo" href="#top">LEKTURA</a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#odds">Odds</a>
+      <a href="#play">Play</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO: pinned while the dice is thrown by scrolling -->
+    <section class="hero" id="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+
+      <div class="hero__copy">
+        <p class="eyebrow">Chance, engineered</p>
+        <h1 class="hero__title">
+          <span class="line"><span>Roll</span></span>
+          <span class="line"><span>the <em>odds.</em></span></span>
+        </h1>
+        <p class="hero__sub">Every great story starts with a throw. Scroll down and let the dice decide.</p>
+      </div>
+
+      <div class="hero__result" aria-live="polite">
+        <p class="eyebrow">The dice has spoken</p>
+        <h2>You rolled a <em>six.</em></h2>
+      </div>
+
+      <div class="impact" id="heroImpact" aria-hidden="true"></div>
+      <div class="shadow" id="heroShadow" aria-hidden="true"></div>
+      <div class="dice-wrap" id="heroDiceWrap" aria-hidden="true">
+        <div class="dice-bob">
+          <div class="dice-tilt">
+            <div class="dice" data-dice></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <span>Scroll to roll</span>
+        <span class="scroll-hint__bar"></span>
+      </div>
+    </section>
+
+    <!-- ODDS -->
+    <section class="odds" id="odds">
+      <div class="section-head">
+        <p class="eyebrow">01 — The odds</p>
+        <h2 class="reveal">Six faces.<br />Infinite outcomes.</h2>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card__face" data-face="1"></div>
+          <h3>Take the first step</h3>
+          <p>One pip, one decision. Momentum always starts smaller than you think.</p>
+          <span class="card__odds">1 in 6</span>
+        </article>
+        <article class="card">
+          <div class="card__face" data-face="3"></div>
+          <h3>Play the middle</h3>
+          <p>Three is balance — enough risk to matter, enough safety to sleep at night.</p>
+          <span class="card__odds">1 in 6</span>
+        </article>
+        <article class="card">
+          <div class="card__face" data-face="5"></div>
+          <h3>Stack the pattern</h3>
+          <p>Five is a crowd with a center. Build around what already holds.</p>
+          <span class="card__odds">1 in 6</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track marquee__track--a">
+        <span>Roll · Risk · Reward · </span><span>Roll · Risk · Reward · </span><span>Roll · Risk · Reward · </span>
+      </div>
+      <div class="marquee__track marquee__track--b">
+        <span>Luck favours the bold · </span><span>Luck favours the bold · </span><span>Luck favours the bold · </span>
+      </div>
+    </section>
+
+    <!-- PLAY -->
+    <section class="play" id="play">
+      <div class="section-head">
+        <p class="eyebrow">02 — Your turn</p>
+        <h2 class="reveal">Feeling lucky?</h2>
+      </div>
+
+      <div class="play__grid">
+        <div class="play__stage">
+          <div class="shadow shadow--static" id="playShadow" aria-hidden="true"></div>
+          <div class="dice-wrap dice-wrap--static" id="playDiceWrap" aria-hidden="true">
+            <div class="dice-bob">
+              <div class="dice-tilt">
+                <div class="dice" id="playDice" data-dice></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="play__panel">
+          <p class="eyebrow">Last roll</p>
+          <p class="play__number" id="playNumber">—</p>
+          <p class="play__word" id="playWord" aria-live="polite">Hit the button to throw.</p>
+          <button class="btn" id="rollBtn" type="button">Roll the dice</button>
+          <ul class="play__history" id="playHistory" aria-label="Roll history"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="contact">
+    <p class="eyebrow">03 — Say hello</p>
+    <a class="footer__mail" href="mailto:hello@lektura.com">hello@lektura.com</a>
+    <div class="footer__big" aria-hidden="true">LEKTURA</div>
+    <div class="footer__meta">
+      <span>© 2026 Lektura</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

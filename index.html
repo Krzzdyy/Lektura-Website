@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lektura — AI Presentation Generator</title>
+  <meta name="description" content="Answer five questions and Lektura generates a complete, editable PowerPoint deck in minutes. Edit it, export it, or turn it into a video narrated by your own cloned voice." />
+  <meta name="theme-color" content="#f7f4ee" />
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+
+  <!-- Pick day/night before first paint: saved choice, else the OS setting -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem("lektura-theme"); } catch (e) { /* storage blocked */ }
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- ============================== NAV ============================== -->
+  <header class="nav">
+    <a class="nav__brand" href="#top" aria-label="Lektura home">
+      <img src="assets/lektura-logo.png" alt="" width="34" height="34" />
+      <span>Lektura</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#who">Who it's for</a>
+    </nav>
+    <div class="nav__actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to night mode" data-theme-toggle>
+        <svg class="theme-toggle__sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.5" />
+          <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" />
+        </svg>
+        <svg class="theme-toggle__moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z" />
+        </svg>
+      </button>
+      <a class="btn btn--small" href="#get-started">Get started</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ========================= STORY (pinned) =========================
+         The cube is the Lektura logo. Each scroll step rolls it onto a new
+         face, and the matching feature panel slides in beside it. -->
+    <section class="story" id="features">
+      <div class="story__bg" aria-hidden="true"></div>
+
+      <!-- Hero copy -->
+      <div class="hero">
+        <p class="eyebrow">AI presentation generator</p>
+        <h1 class="hero__title">
+          <span class="hero__line"><span class="hero__line-inner">Your whole deck,</span></span>
+          <span class="hero__line"><span class="hero__line-inner"><em>rolled out</em> in</span></span>
+          <span class="hero__line"><span class="hero__line-inner">minutes.</span></span>
+        </h1>
+        <p class="hero__sub">
+          Answer five simple questions. Lektura researches, writes and designs a complete
+          PowerPoint deck — then hands you the controls.
+        </p>
+        <div class="hero__actions">
+          <a class="btn" href="#get-started">Create your first deck</a>
+          <a class="btn btn--ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+
+      <!-- The cube: drawn in WebGL on the canvas (which also moves to the CTA
+           when that's on screen); the DOM cube below sets its position and is
+           the fallback when WebGL isn't available -->
+      <canvas class="cube-canvas" aria-hidden="true"></canvas>
+      <div class="cube-shadow" aria-hidden="true"></div>
+      <div class="cube-pos" aria-hidden="true">
+        <div class="cube-float">
+          <div class="cube-hop">
+            <div class="cube-tilt">
+              <div class="cube" data-cube></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature panels (one per face) -->
+      <div class="panels">
+        <article class="panel" data-step="1">
+          <p class="panel__count"><span class="panel__num">01</span> / 05</p>
+          <p class="eyebrow">AI generation</p>
+          <h2>One brief in.<br />A complete deck out.</h2>
+          <p class="panel__text">
+            Tell Lektura your topic, how many slides, who's listening, how much detail, and
+            anything to emphasise or leave out. In a single pass it researches facts and sources,
+            writes every slide, designs the layout and checks the quality.
+          </p>
+          <ul class="chips" aria-label="The five questions">
+            <li>Topic</li><li>Slide count</li><li>Audience</li><li>Detail</li><li>Emphasis</li>
+          </ul>
+        </article>
+
+        <article class="panel" data-step="2">
+          <p class="panel__count"><span class="panel__num">02</span> / 05</p>
+          <p class="eyebrow">Voice cloning &amp; video</p>
+          <h2>Your voice.<br />No recording booth.</h2>
+          <p class="panel__text">
+            Clone your own voice once, and Lektura turns any deck into a video presentation
+            narrated by you — without re-recording takes or hiring a voice actor.
+          </p>
+          <div class="wave" aria-hidden="true">
+            <i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i>
+            <i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i><i class="wave__bar"></i>
+          </div>
+        </article>
+
+        <article class="panel" data-step="3">
+          <p class="panel__count"><span class="panel__num">03</span> / 05</p>
+          <p class="eyebrow">Full editing</p>
+          <h2>It's your deck.<br />Change anything.</h2>
+          <p class="panel__text">
+            The AI does the first pass — then it steps aside. Rewrite text, add or remove slides,
+            rearrange the order, and drag, resize or rotate any element. Every change is tracked,
+            so undo is always one click away.
+          </p>
+          <ul class="chips">
+            <li>Edit text</li><li>Reorder</li><li>Drag</li><li>Resize</li><li>Rotate</li><li>Undo</li>
+          </ul>
+        </article>
+
+        <article class="panel" data-step="4">
+          <p class="panel__count"><span class="panel__num">04</span> / 05</p>
+          <p class="eyebrow">Face animation cloning</p>
+          <h2>Your face.<br />Presenting for you.</h2>
+          <p class="panel__text">
+            Pair your cloned voice with an animated clone of your face. Lektura turns your deck
+            into a video where an animated you presents every slide — no camera, lighting or
+            retakes required.
+          </p>
+          <div class="avatar" aria-hidden="true">
+            <div class="avatar__face">
+              <i class="avatar__eye"></i><i class="avatar__eye"></i>
+              <i class="avatar__mouth"></i>
+            </div>
+            <div class="avatar__meta">
+              <span class="avatar__rec">Presenting</span>
+              <span class="avatar__label">Slide 3 of 8 · your face, your voice</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" data-step="5">
+          <p class="panel__count"><span class="panel__num">05</span> / 05</p>
+          <p class="eyebrow">Classroom tools</p>
+          <h2>Made for teachers,<br />ready for students.</h2>
+          <p class="panel__text">
+            Create a class and invite students with a join code. Post quizzes and see how everyone
+            is doing, while students take quizzes and track their own progress.
+          </p>
+          <div class="join" aria-hidden="true">
+            <span class="join__label">Class join code</span>
+            <span class="join__code">K7Q · 2XM</span>
+          </div>
+        </article>
+
+        <article class="panel panel--final" data-step="6">
+          <p class="eyebrow">That's Lektura</p>
+          <h2>Five questions.<br /><em>One complete deck.</em></h2>
+          <p class="panel__text">
+            Spend your time making the presentation better — not building it from scratch.
+          </p>
+          <a class="btn" href="#get-started">Start for free</a>
+        </article>
+      </div>
+
+      <!-- Step rail -->
+      <nav class="rail" aria-label="Feature steps">
+        <button class="rail__btn" type="button" data-goto="f1"><span class="rail__num">01</span>AI generation</button>
+        <button class="rail__btn" type="button" data-goto="f2"><span class="rail__num">02</span>Voice cloning</button>
+        <button class="rail__btn" type="button" data-goto="f3"><span class="rail__num">03</span>Editing</button>
+        <button class="rail__btn" type="button" data-goto="f4"><span class="rail__num">04</span>Face cloning</button>
+        <button class="rail__btn" type="button" data-goto="f5"><span class="rail__num">05</span>Classroom</button>
+      </nav>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <span>Scroll to roll</span>
+        <span class="scroll-hint__bar"></span>
+      </div>
+    </section>
+
+    <!-- ========================= HOW IT WORKS ========================= -->
+    <section class="how" id="how">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 class="reveal">From blank page to<br /><em>presenting</em> in four steps.</h2>
+      </div>
+
+      <div class="steps">
+        <div class="steps__line" aria-hidden="true"><span class="steps__progress"></span></div>
+        <article class="step">
+          <span class="step__num">1</span>
+          <h3>Answer a few questions</h3>
+          <p>Topic, slide count (1–10, or let Lektura decide), audience, level of detail, and anything to include or skip.</p>
+        </article>
+        <article class="step">
+          <span class="step__num">2</span>
+          <h3>Lektura builds the deck</h3>
+          <p>It researches facts and sources, writes the content, designs the layout and checks quality — all before you see a slide.</p>
+        </article>
+        <article class="step">
+          <span class="step__num">3</span>
+          <h3>Make it yours</h3>
+          <p>Edit text, add, remove or rearrange slides, move elements around, or switch the theme.</p>
+        </article>
+        <article class="step">
+          <span class="step__num">4</span>
+          <h3>Export and present</h3>
+          <p>Download a PowerPoint file, generate a narrated video, present in the app, or share for feedback.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================= MORE FEATURES ========================= -->
+    <section class="more" id="more">
+      <div class="section-head">
+        <p class="eyebrow">And the details</p>
+        <h2 class="reveal">Everything else a<br />good deck needs.</h2>
+      </div>
+
+      <div class="tiles">
+        <article class="tile tile--navy">
+          <h3>Five built-in themes</h3>
+          <p>Distinct looks and backdrops, with custom typography and colours, in light or dark mode.</p>
+          <div class="swatches" aria-hidden="true"><i class="swatches__dot"></i><i class="swatches__dot"></i><i class="swatches__dot"></i><i class="swatches__dot"></i><i class="swatches__dot"></i></div>
+        </article>
+        <article class="tile">
+          <h3>Layouts that adapt</h3>
+          <p>Each slide gets a layout that fits its content — bullets, numbers, timelines, quotes. Prefer another? Pick it yourself.</p>
+        </article>
+        <article class="tile">
+          <h3>Speaker notes</h3>
+          <p>AI-written notes for every slide. Edit them one by one, or regenerate notes for a single slide.</p>
+        </article>
+        <article class="tile tile--orange">
+          <h3>Saved to the cloud</h3>
+          <p>Every deck saves automatically. Sign in with your email from any device and pick up where you left off.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================= WHO ========================= -->
+    <section class="who" id="who">
+      <div class="section-head">
+        <p class="eyebrow">Who it's for</p>
+        <h2 class="reveal">Anyone who has<br />to stand up and <em>present.</em></h2>
+      </div>
+
+      <div class="who__list">
+        <article class="who__item">
+          <span class="who__idx">01</span>
+          <h3>Sales &amp; business teams</h3>
+          <p>Client pitches and reports, ready the same afternoon.</p>
+        </article>
+        <article class="who__item">
+          <span class="who__idx">02</span>
+          <h3>Educators</h3>
+          <p>Lesson decks in minutes, plus quizzes and progress tracking for every class.</p>
+        </article>
+        <article class="who__item">
+          <span class="who__idx">03</span>
+          <h3>Students</h3>
+          <p>Join a teacher's class with a code, take quizzes and follow your own progress.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ========================= CTA ========================= -->
+    <section class="cta" id="get-started">
+      <div class="cta__cube" aria-hidden="true">
+        <div class="cube-hop">
+          <div class="cube-tilt cube-tilt--iso">
+            <div class="cube" data-cube data-cube-spin></div>
+          </div>
+        </div>
+      </div>
+      <p class="eyebrow">Ready when you are</p>
+      <h2 class="reveal">Stop building slides.<br /><em>Start presenting.</em></h2>
+      <p class="cta__sub">Runs in any modern browser. Nothing to install.</p>
+      <a class="btn btn--light" href="#get-started">Create your first deck</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a class="nav__brand" href="#top">
+      <img src="assets/lektura-logo.png" alt="" width="28" height="28" />
+      <span>Lektura</span>
+    </a>
+    <span>© 2026 Lektura. All rights reserved.</span>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
